@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán</title>
+    <link rel="stylesheet" href="css/checkout.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Thanh toán</h1>
+        <div id="cartItems"></div>
+        <div id="totalPrice"></div>
+        <button onclick="completeOrder()">Hoàn tất đặt hàng</button>
+    </div>
+
+    <script>
+        // Load giỏ hàng từ localStorage
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cartItems = document.getElementById('cartItems');
+            let totalPrice = 0;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = "<p>Giỏ hàng của bạn trống!</p>";
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <span>${item.name}</span>
+                        <span>${item.price}đ</span>
+                        <span>Số lượng: ${item.quantity}</span>
+                    </div>
+                `).join('');
+
+                // Tính tổng giá
+                totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+                document.getElementById('totalPrice').innerHTML = `Tổng tiền: ${totalPrice}đ`;
+            }
+        }
+
+        // Hoàn tất đặt hàng
+        function completeOrder() {
+            alert('Đặt hàng thành công!');
+            localStorage.removeItem('cart'); // Xóa giỏ hàng sau khi đặt hàng
+            window.location.href = 'thankyou.html'; // Chuyển đến trang cảm ơn
+        }
+
+        // Tải giỏ hàng khi trang được load
+        window.onload = loadCart;
+    </script>
+</body>
+</html>
